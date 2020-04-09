@@ -1,10 +1,15 @@
 package app.model;
 
+import com.mongodb.client.model.geojson.Point;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Data
 @Document(collection = "users")
@@ -13,21 +18,28 @@ public class User {
     @Id
     private ObjectId id;
 
+    @Indexed(unique = false)
+    private String username;
 
-    @Indexed(unique = true)
-    private String login;
     private String password;
+    private int status;
+
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private GeoJsonPoint location;
+
 
     @Indexed(unique = true)
     private String email;
 
     public User(){}
     public User(User user){}
-    public User(ObjectId id, String login, String password, String email) {
+    public User(ObjectId id, String username, String password, String email, int status, GeoJsonPoint location) {
         this.id = id;
-        this.login = login;
+        this.username = username;
         this.password = password;
         this.email = email;
+        this.status = status;
+        this.location = location;
     }
 
     public ObjectId getId() {
@@ -38,12 +50,12 @@ public class User {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -60,5 +72,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public GeoJsonPoint getPoint() {
+        return location;
+    }
+
+    public void setPoint(GeoJsonPoint point) {
+        this.location = point;
     }
 }

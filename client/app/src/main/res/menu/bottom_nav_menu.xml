@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+    android:id="@+id/radar"
+    android:title="Near by"
+    android:icon="@drawable/radar"
+    />
+    <item
+        android:id="@+id/status"
+        android:title="You"
+        android:icon="@drawable/you"
+        />
+
+</menu>

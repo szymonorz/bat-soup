@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:padding="30dp"
+        android:layout_marginTop="30dp">
+        <LinearLayout
+            android:id="@+id/image_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/image"
+                android:background="@drawable/box_shadow"
+                android:src="@drawable/you"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/username"
+            android:gravity="center"
+            android:layout_below="@+id/image_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Szymon Orzechowski"
+            android:inputType="none"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/status"
+            android:gravity="center"
+            android:layout_below="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:text="Status: "
+            android:textSize="20sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/status"
+            android:layout_below="@id/username"
+            android:padding="10dp"
+            android:layout_margin="5dp"
+            android:background="#f00"/>
+        <TextView
+            android:id="@+id/coor"
+            android:gravity="center"
+            android:layout_below="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Coordinates x: 46.2314 y: 75.33113"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_margin="20dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/edit"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
+
+
+
+
+
+</RelativeLayout>

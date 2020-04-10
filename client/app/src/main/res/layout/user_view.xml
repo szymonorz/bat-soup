@@ -27,5 +27,12 @@
         android:layout_toEndOf="@id/x"
         android:text="Y"
         android:textSize="20sp"/>
+    <ImageView
+        android:id="@id/status"
+        android:layout_margin="10dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:background="#0f0"/>
 
 </RelativeLayout>

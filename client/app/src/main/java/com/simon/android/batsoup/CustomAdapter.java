@@ -1,10 +1,12 @@
 package com.simon.android.batsoup;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.simon.android.batsoup.model.User;
@@ -50,6 +52,13 @@ public class CustomAdapter extends BaseAdapter {
         x.setText(String.format("%5.3f",user.getLocation().getX()));
         TextView y = convertView.findViewById(R.id.y);
         y.setText(String.format("%5.3f",user.getLocation().getY()));
+        ImageView stauts = convertView.findViewById(R.id.status);
+        switch (user.getStatus())
+        {
+            case 0: stauts.setBackgroundColor(Color.GREEN); break;
+            case 1: stauts.setBackgroundColor(Color.YELLOW); break;
+            case 2: stauts.setBackgroundColor(Color.RED); break;
+        }
 
         return convertView;
     }

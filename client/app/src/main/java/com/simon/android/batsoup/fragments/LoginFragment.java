@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,13 @@ public class LoginFragment extends Fragment {
         Button button = view.findViewById(R.id.sign_email);
         EditText email = view.findViewById(R.id.email_login);
         EditText password = view.findViewById(R.id.password_login);
+        TextView register = view.findViewById(R.id.register);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new RegisterFragment()).commit();
+            }
+        });
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)

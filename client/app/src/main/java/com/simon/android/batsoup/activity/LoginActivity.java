@@ -20,12 +20,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(onSavedInstance);
         setContentView(R.layout.login_layout);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8888")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiInterface = retrofit.create(ApiInterface.class);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new LoginFragment()).commit();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://10.0.2.2:8888")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        apiInterface = retrofit.create(ApiInterface.class);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new LoginFragment()).commit();
 
     }
 

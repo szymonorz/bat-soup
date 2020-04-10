@@ -40,29 +40,32 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiInterface = retrofit.create(ApiInterface.class);
+         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemReselectedListener);
         changeFragment(new SearchFragment());
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom);
-
 
 
     }
 
-    private BottomNavigationView.OnNavigationItemReselectedListener navigationItemReselectedListener =
-            new BottomNavigationView.OnNavigationItemReselectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemReselectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+
                 @Override
-                public void onNavigationItemReselected(@NonNull MenuItem item) {
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment fragment = null;
                     switch (item.getItemId())
                     {
-                        case R.id.radar: changeFragment(new SearchFragment()); break;
-                        case R.id.status: changeFragment(new StatusFragment()); break;
+                        case R.id.radar: fragment = new SearchFragment(); break;
+                        case R.id.status: fragment = new StatusFragment(); break;
                     }
+                    changeFragment(fragment);
+                    return true;
                 }
             };
 
     private void changeFragment(Fragment fragment)
     {
-        getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, fragment).commit();
     }
 
 }

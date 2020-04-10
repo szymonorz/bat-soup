@@ -39,7 +39,6 @@ public class SearchFragment extends Fragment {
 
         ListView listView = view.findViewById(R.id.list);
 
-        globalUsers.add(new User(new ObjectId(), 1,"marcin", "frajer", "email", new GeoJsonPoint(3,2)));
         adapter = new CustomAdapter(globalUsers,getContext());
         listView.setAdapter(adapter);
 

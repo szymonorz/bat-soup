@@ -19,6 +19,9 @@ BatSoup to aplikacja mająca zamiar informować użytkowników o lokalizacji naj
   - JWT (JSON Web Token) - Token w postaci JSON'a umozliwiający autoryzację użytkownika 
   - Fragmenty - utworzono dwa Fragmenty (logowanie i rejestracja), które się wzajemnie zastępują w LoginActivity, oraz dwa fragmenty w MainActivity, jeden do monitorowania statusu osób w pobliżu, drugi do sprawdzenia swojego statusu
   - Material Design - technologia, która zawiera już gotowe komponenty dla widoku
+# Planowane mechanizmy
+- Informacja w postaci sygnału dźwiękowego, jeżeli użytkownik znajduje się w pobliżu osoby zarażonej
+- Notyfikacja z aplikacji w przypadku spotkania się w pobliżu osoby zarażonej
 
 # Wzorce projektowe
 - Repository

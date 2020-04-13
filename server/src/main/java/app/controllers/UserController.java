@@ -3,6 +3,7 @@ package app.controllers;
 import app.jwt.JwtResponse;
 import app.jwt.JwtUtil;
 import app.model.*;
+import app.services.CustomUserDetailsService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,7 +50,8 @@ public class UserController {
         System.out.println("chuj");
         try {
             User user = userRepository.findUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
-            String token = jwtUtil.generateToken(user.getEmail());
+            UserDetails us = customUserDetailsService.loadUserByUsername(user.getUsername());
+            String token = jwtUtil.generateToken(us);
             System.out.println(token);
             return ResponseEntity.ok(new JwtResponse(token));
         }catch (NullPointerException e)
@@ -61,10 +67,10 @@ public class UserController {
         System.out.println("chuj");
         try {
             User user = userRepository.findUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
-            String token = jwtUtil.generateToken(user.getEmail());
+            CustomUserDetails us = (CustomUserDetails) customUserDetailsService.loadUserByUsername(user.getUsername());
+            System.out.println(us);
+            String token = jwtUtil.generateToken(us);
             System.out.println(token);
-            HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.add("Authorization","Bearer "+token);
 
             return ResponseEntity.ok(new JwtResponse(token));
         }catch (NullPointerException e)

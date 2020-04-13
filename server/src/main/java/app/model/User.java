@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 
 @Data
@@ -18,7 +19,7 @@ public class User {
     @Id
     private ObjectId id;
 
-    @Indexed(unique = false)
+    @Field("username")
     private String username;
 
     private String password;
@@ -32,7 +33,6 @@ public class User {
     private String email;
 
     public User(){}
-    public User(User user){}
     public User(ObjectId id, String username, String password, String email, int status, GeoJsonPoint location) {
         this.id = id;
         this.username = username;

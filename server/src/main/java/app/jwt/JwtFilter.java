@@ -1,15 +1,19 @@
 package app.jwt;
 
+import app.model.CustomUserDetails;
 import app.model.User;
 import app.model.UserRepository;
+import app.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sun.security.krb5.Credentials;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,32 +28,30 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomUserDetailsService customUserDetailsService;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
             final String authHeader = httpServletRequest.getHeader("Authorization");
-            String email = null;
             String jwt = null;
             String username = null;
-            User user = null;
             if(authHeader!=null && authHeader.startsWith("Bearer "))
             {
                 jwt = authHeader.substring(7);
-                email = jwtUtil.getEmailFromToken(jwt);
-                System.out.println("Brrrr "+email);
-                user = userRepository.findUserByEmail(email);
-                username = userRepository.findUserByEmail(email).getUsername();
+                System.out.println("Brrrr "+jwt);
+                username =  jwtUtil.getUsernameFromToken(jwt);
                 System.out.println(username);
             }
 
-            if(email!=null && SecurityContextHolder.getContext().getAuthentication() == null)
+            if(username!=null && SecurityContextHolder.getContext().getAuthentication() == null)
             {
-                if(jwtUtil.validateToken(jwt,user))
+                CustomUserDetails userDetails= (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);
+                if(jwtUtil.validateToken(jwt,userDetails))
                 {
+
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                            user,null
+                            userDetails, null, userDetails.getAuthorities()
                     );
                     System.out.println("Bearer "+jwt);
                     usernamePasswordAuthenticationToken

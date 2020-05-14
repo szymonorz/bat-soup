@@ -1,19 +1,13 @@
 package app.jwt;
 
 import app.model.CustomUserDetails;
-import app.model.User;
-import app.model.UserRepository;
 import app.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sun.security.krb5.Credentials;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -4,6 +4,7 @@ import app.jwt.JwtResponse;
 import app.jwt.JwtUtil;
 import app.model.*;
 import app.services.CustomUserDetailsService;
+import app.services.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,6 +34,12 @@ public class UserController {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @RequestMapping(value = "find", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,12 +55,11 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> loginAfterRegister(@RequestAttribute("loginForm") LoginForm loginForm)
     {
-        System.out.println("chuj");
         try {
-            User user = userRepository.findUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
-            UserDetails us = customUserDetailsService.loadUserByUsername(user.getUsername());
+            User user = userRepository.findUserByEmail(loginForm.getEmail());
+            CustomUserDetails us = (CustomUserDetails) customUserDetailsService.loadUserByUsername(user.getUsername());
             String token = jwtUtil.generateToken(us);
-            System.out.println(token);
+
             return ResponseEntity.ok(new JwtResponse(token));
         }catch (NullPointerException e)
         {
@@ -64,28 +71,34 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<?> loginUser(@RequestBody LoginForm loginForm)
     {
-        System.out.println("chuj");
-        try {
-            User user = userRepository.findUserByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword());
+         try {
+            User user = userRepository.findUserByEmail(loginForm.getEmail());
             CustomUserDetails us = (CustomUserDetails) customUserDetailsService.loadUserByUsername(user.getUsername());
-            System.out.println(us);
             String token = jwtUtil.generateToken(us);
-            System.out.println(token);
 
             return ResponseEntity.ok(new JwtResponse(token));
         }catch (NullPointerException e)
         {
+            System.out.println(passwordEncoder.encode(loginForm.getPassword()));
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
     }
 
+    @RequestMapping(value = "getUser/{token}", method = RequestMethod.GET)
+    @ResponseBody
+    private ResponseEntity<User> getUser(@PathVariable("token") String token)
+    {
+        String username = jwtUtil.getUsernameFromToken(token);
+        User currentUser = userRepository.findUserByUsername(username);
+        return ResponseEntity.ok(currentUser);
+    }
 
     @RequestMapping(value = "registerUser", method = RequestMethod.POST)
     private ModelAndView createUser(@RequestBody RegisterForm registerForm)
     {
-        User u = new User(new ObjectId(), registerForm.getUsername(),registerForm.getPassword(), registerForm.getEmail(), 0, new GeoJsonPoint(0,0));
+
         try{
-            userRepository.save(u);
+            User u = userService.registerNewAccount(registerForm);
         }catch (Exception e)
         {
             e.printStackTrace();

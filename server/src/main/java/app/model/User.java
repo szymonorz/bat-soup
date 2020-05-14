@@ -19,7 +19,7 @@ public class User {
     @Id
     private ObjectId id;
 
-    @Field("username")
+    @Indexed(unique = true)
     private String username;
 
     private String password;

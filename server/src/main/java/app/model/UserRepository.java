@@ -13,12 +13,9 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
-    public List<User> findUsersByUsername(String login);
-    public User findUserByEmailAndPassword(String email, String password);
+     public User findUserByEmailAndPassword(String email, String password);
     public User findUserByUsername(String login);
-    public User findUserByEmail(String email);
-
-    public List<User> findUsersByLocationWithin(Polygon polygon);
+    User findUserByEmail(String email);
 
 
     List<User> findUsersByLocationNear(GeoJsonPoint location, Distance distance);

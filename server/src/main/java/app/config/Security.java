@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -24,7 +27,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService);
+        auth.authenticationProvider(authProvider());
 
     }
 
@@ -37,8 +40,11 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/loginUser", "/registerUser").permitAll()
                 .anyRequest().authenticated().and()
                  .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         httpSecurity.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.httpBasic().disable();
+//        httpSecurity.authorizeRequests().antMatchers("/**").permitAll()
+//                .and().formLogin().defaultSuccessUrl("/welcome", true);
     }
 
 
@@ -48,9 +54,24 @@ public class Security extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder()
+    {
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Bean
     public JwtFilter authenticationFilter(){
         return new JwtFilter();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authProvider()
+    {
+        DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
+        dao.setUserDetailsService(customUserDetailsService);
+        dao.setPasswordEncoder(passwordEncoder());
+        return dao;
     }
 }
